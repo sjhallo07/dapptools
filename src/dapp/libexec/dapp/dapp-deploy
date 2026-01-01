@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+### dapp-deploy -- deploy a compiled contract (alias for dapp create)
+### Usage: dapp deploy <contractname> or
+###        dapp deploy <path>:<contractname>
+### Add --verify and export your ETHERSCAN_API_KEY to auto-verify on Etherscan
+set -e
+
+# dapp-deploy is an alias for dapp-create for more intuitive usage
+exec dapp create "$@"
