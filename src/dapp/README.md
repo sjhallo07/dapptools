@@ -28,6 +28,7 @@ that isn't available in `rpc`, such as [fuzz testing](#property-based-testing), 
   - [`dapp test`](#dapp-test)
   - [`dapp debug`](#dapp-debug)
   - [`dapp create`](#dapp-create)
+  - [`dapp deploy`](#dapp-deploy)
   - [`dapp address`](#dapp-address)
   - [`dapp install`](#dapp-install)
   - [`dapp uninstall`](#dapp-uninstall)
@@ -282,10 +283,16 @@ with a balance of a particular token. This can be done using [`hevm cheat codes`
 
 ### Deployment
 
-To deploy a contract, you can use `dapp create`:
+To deploy a contract, you can use `dapp create` or `dapp deploy`:
 
 ```solidity
 dapp create Dapptutorial [<constructorArgs>] [<options>]
+```
+
+or equivalently:
+
+```solidity
+dapp deploy Dapptutorial [<constructorArgs>] [<options>]
 ```
 
 The `--verify` flag verifies the contract on etherscan (requires `ETHERSCAN_API_KEY`).
@@ -529,6 +536,16 @@ for key bindings for navigation.
     Usage: dapp create <contractname> or
         dapp create <path>:<contractname>
     Add --verify and export your ETHERSCAN_API_KEY to auto-verify on Etherscan
+
+### `dapp deploy`
+
+    dapp-deploy -- deploy a compiled contract (alias for dapp create)
+    Usage: dapp deploy <contractname> or
+        dapp deploy <path>:<contractname>
+    Add --verify and export your ETHERSCAN_API_KEY to auto-verify on Etherscan
+
+`dapp deploy` is an intuitive alias for `dapp create` that deploys a compiled contract.
+Both commands function identically.
 
 ### `dapp address`
 
