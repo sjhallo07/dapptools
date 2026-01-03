@@ -17,7 +17,25 @@ hand-crafted and maintained by DappHub, along with dependency management, courte
 
 dapptools is currently in a stage of clandestine development where support for the casual user may
 be deprived. The software can now be considered free as in free puppy. Users seeking guidance can
-explore using foundry as an alternative
+explore using Foundry as an alternative.
+
+## 🎉 Modern Ethereum Stack
+
+This environment includes both **classic dapptools** and **modern Foundry**:
+
+### dapptools (Haskell-based, Nix)
+- `dapp` - Build, test, and deploy smart contracts
+- `hevm` - EVM implementation for testing and debugging
+- `seth` - Ethereum CLI for contract interaction
+- `ethsign` - Transaction signing tool
+
+### Foundry (Rust-based, precompiled)
+- `forge` - Solidity testing and development framework
+- `cast` - CLI for blockchain interaction
+- `anvil` - Local Ethereum test node
+- `chisel` - Solidity interactive REPL
+
+**See [FOUNDRY_GUIDE.md](./FOUNDRY_GUIDE.md) for installation and usage details.**
 
 ## Installation
 
