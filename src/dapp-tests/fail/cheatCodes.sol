@@ -1,14 +1,15 @@
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.6.7;
 pragma experimental ABIEncoderV2;
 
-import "ds-test/test.sol";
+import "../../../ds-test/src/test.sol";
 
 interface Hevm {
     function warp(uint256) external;
     function roll(uint256) external;
-    function load(address,bytes32) external returns (bytes32);
-    function store(address,bytes32,bytes32) external;
-    function sign(uint256,bytes32) external returns (uint8,bytes32,bytes32);
+    function load(address, bytes32) external returns (bytes32);
+    function store(address, bytes32, bytes32) external;
+    function sign(uint256, bytes32) external returns (uint8, bytes32, bytes32);
     function addr(uint256) external returns (address);
     function ffi(string[] calldata) external returns (bytes memory);
 }
