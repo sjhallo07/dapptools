@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { BrowserProvider, Contract, formatUnits, parseUnits } from 'ethers'
+import { BrowserProvider, JsonRpcProvider, Contract, formatUnits, parseUnits } from 'ethers'
 import './TokenDashboard.css'
 
 // DSToken ABI
@@ -27,7 +27,7 @@ interface TokenInfo
 
 const TokenDashboard: React.FC = () =>
 {
-    const [provider, setProvider] = useState<BrowserProvider | null>(null)
+    const [provider, setProvider] = useState<BrowserProvider | JsonRpcProvider | null>(null)
     const [account, setAccount] = useState<string>('')
     const [tokenAddress, setTokenAddress] = useState<string>('')
     const [tokenInfo, setTokenInfo] = useState<TokenInfo | null>(null)
@@ -39,22 +39,38 @@ const TokenDashboard: React.FC = () =>
     useEffect(() =>
     {
         connectWallet()
+        // Set default token address from env
+        const defaultAddr = import.meta.env.VITE_DEFAULT_TOKEN_ADDRESS
+        if (defaultAddr) {
+            setTokenAddress(defaultAddr)
+        }
     }, [])
 
     const connectWallet = async () =>
     {
         try {
-            if (!window.ethereum) {
-                setError('MetaMask not detected. Please install MetaMask.')
-                return
+            // Try MetaMask first
+            if (window.ethereum) {
+                try {
+                    const provider = new BrowserProvider(window.ethereum)
+                    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' }) as string[]
+                    setProvider(provider)
+                    setAccount(accounts[0])
+                    setError('')
+                    return
+                } catch (err) {
+                    // MetaMask connection failed, fall through to use Anvil
+                }
             }
 
-            const provider = new BrowserProvider(window.ethereum)
-            const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' })
-
+            // Use Anvil local RPC as fallback
+            const rpcUrl = import.meta.env.VITE_RPC_URL || 'http://127.0.0.1:8545'
+            const deployerAddr = import.meta.env.VITE_DEPLOYER_ADDRESS || '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266'
+            const provider = new JsonRpcProvider(rpcUrl)
             setProvider(provider)
-            setAccount(accounts[0])
+            setAccount(deployerAddr)
             setError('')
+            console.log('Connected to Anvil at', rpcUrl)
         } catch (err) {
             setError(`Connection failed: ${err instanceof Error ? err.message : 'Unknown error'}`)
         }
@@ -101,6 +117,15 @@ const TokenDashboard: React.FC = () =>
 
         try {
             setIsLoading(true)
+
+            // For Anvil, we can only read from the contract
+            // Actual transfers require a signer (which requires MetaMask or a private key)
+            if (provider instanceof JsonRpcProvider) {
+                setError('Transfers require MetaMask or a signed transaction. Use cast send command instead.')
+                setIsLoading(false)
+                return
+            }
+
             const signer = await provider.getSigner()
             const contract = new Contract(tokenAddress, TOKEN_ABI, signer)
             const decimals = tokenInfo?.decimals || 18
