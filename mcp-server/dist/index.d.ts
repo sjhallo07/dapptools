@@ -5,7 +5,8 @@
 export declare class MCPServer {
     private jsonRpc;
     private contractManager;
-    constructor(rpcUrl?: string);
+    private dappAnalyzer;
+    constructor(rpcUrl?: string, projectRoot?: string);
     /**
      * Get network information
      */
@@ -72,8 +73,15 @@ export declare class MCPServer {
     increaseTime(seconds: number): Promise<void>;
     createSnapshot(): Promise<string>;
     revertSnapshot(snapshotId: string): Promise<void>;
+    /**
+     * Dapp Modernization & Analysis
+     */
+    analyzeDapp(): Promise<import("./dappAnalyzer.js").DappAnalysis>;
+    printDappReport(analysis: any): void;
+    generateUpgradeScript(analysis: any): Promise<string>;
 }
 export declare const createMCPServer: (rpcUrl?: string) => MCPServer;
-export { JsonRpcClient } from './jsonRpcClient';
-export { SmartContractManager } from './smartContractManager';
+export { JsonRpcClient } from './jsonRpcClient.js';
+export { SmartContractManager } from './smartContractManager.js';
+export { DappAnalyzer } from './dappAnalyzer.js';
 //# sourceMappingURL=index.d.ts.map

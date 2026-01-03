@@ -1,5 +1,5 @@
 import { Contract } from 'ethers';
-import { JsonRpcClient } from './jsonRpcClient';
+import { JsonRpcClient } from './jsonRpcClient.js';
 /**
  * Smart Contract Interaction Handler
  */

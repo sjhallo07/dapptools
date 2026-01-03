@@ -1,13 +1,15 @@
-import { JsonRpcClient } from './jsonRpcClient';
-import { SmartContractManager } from './smartContractManager';
+import { JsonRpcClient } from './jsonRpcClient.js';
+import { SmartContractManager } from './smartContractManager.js';
+import { DappAnalyzer } from './dappAnalyzer.js';
 /**
  * MCP Server for JSON RPC 2.0 Integration
  * Provides tools for interacting with smart contracts and blockchain
  */
 export class MCPServer {
-    constructor(rpcUrl = 'http://127.0.0.1:8545') {
+    constructor(rpcUrl = 'http://127.0.0.1:8545', projectRoot) {
         this.jsonRpc = new JsonRpcClient(rpcUrl);
         this.contractManager = new SmartContractManager(rpcUrl);
+        this.dappAnalyzer = new DappAnalyzer(rpcUrl, projectRoot);
     }
     /**
      * Get network information
@@ -110,11 +112,24 @@ export class MCPServer {
     async revertSnapshot(snapshotId) {
         await this.jsonRpc.revert(snapshotId);
     }
+    /**
+     * Dapp Modernization & Analysis
+     */
+    async analyzeDapp() {
+        return await this.dappAnalyzer.analyzeDapp();
+    }
+    printDappReport(analysis) {
+        this.dappAnalyzer.printReport(analysis);
+    }
+    async generateUpgradeScript(analysis) {
+        return await this.dappAnalyzer.generateUpgradeScript(analysis);
+    }
 }
 // Export instances
 export const createMCPServer = (rpcUrl) => {
     return new MCPServer(rpcUrl);
 };
-export { JsonRpcClient } from './jsonRpcClient';
-export { SmartContractManager } from './smartContractManager';
+export { JsonRpcClient } from './jsonRpcClient.js';
+export { SmartContractManager } from './smartContractManager.js';
+export { DappAnalyzer } from './dappAnalyzer.js';
 //# sourceMappingURL=index.js.map

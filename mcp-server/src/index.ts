@@ -1,5 +1,6 @@
-import { JsonRpcClient } from './jsonRpcClient'
-import { SmartContractManager } from './smartContractManager'
+import { JsonRpcClient } from './jsonRpcClient.js'
+import { SmartContractManager } from './smartContractManager.js'
+import { DappAnalyzer } from './dappAnalyzer.js'
 
 /**
  * MCP Server for JSON RPC 2.0 Integration
@@ -9,11 +10,13 @@ export class MCPServer
 {
     private jsonRpc: JsonRpcClient
     private contractManager: SmartContractManager
+    private dappAnalyzer: DappAnalyzer
 
-    constructor(rpcUrl: string = 'http://127.0.0.1:8545')
+    constructor(rpcUrl: string = 'http://127.0.0.1:8545', projectRoot?: string)
     {
         this.jsonRpc = new JsonRpcClient(rpcUrl)
         this.contractManager = new SmartContractManager(rpcUrl)
+        this.dappAnalyzer = new DappAnalyzer(rpcUrl, projectRoot)
     }
 
     /**
@@ -176,6 +179,24 @@ export class MCPServer
     {
         await this.jsonRpc.revert(snapshotId)
     }
+
+    /**
+     * Dapp Modernization & Analysis
+     */
+    async analyzeDapp()
+    {
+        return await this.dappAnalyzer.analyzeDapp()
+    }
+
+    printDappReport(analysis: any): void
+    {
+        this.dappAnalyzer.printReport(analysis)
+    }
+
+    async generateUpgradeScript(analysis: any): Promise<string>
+    {
+        return await this.dappAnalyzer.generateUpgradeScript(analysis)
+    }
 }
 
 // Export instances
@@ -184,5 +205,6 @@ export const createMCPServer = (rpcUrl?: string): MCPServer =>
     return new MCPServer(rpcUrl)
 }
 
-export { JsonRpcClient } from './jsonRpcClient'
-export { SmartContractManager } from './smartContractManager'
+export { JsonRpcClient } from './jsonRpcClient.js'
+export { SmartContractManager } from './smartContractManager.js'
+export { DappAnalyzer } from './dappAnalyzer.js'
