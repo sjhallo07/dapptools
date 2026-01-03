@@ -38,26 +38,21 @@ const TokenDashboard: React.FC = () =>
 
     useEffect(() =>
     {
-        connectWallet()
-        // Set default token address from env
-        const defaultAddr = import.meta.env.VITE_DEFAULT_TOKEN_ADDRESS
-        if (defaultAddr) {
-            setTokenAddress(defaultAddr)
-        }
-    }, [])
+        let isMounted = true
 
-    const connectWallet = async () =>
-    {
-        try {
+        const initialize = async () =>
+        {
             // Try MetaMask first
             if (window.ethereum) {
                 try {
                     const provider = new BrowserProvider(window.ethereum)
                     const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' }) as string[]
-                    setProvider(provider)
-                    setAccount(accounts[0])
-                    setError('')
-                    return
+                    if (isMounted) {
+                        setProvider(provider)
+                        setAccount(accounts[0])
+                        setError('')
+                        return
+                    }
                 } catch (err) {
                     // MetaMask connection failed, fall through to use Anvil
                 }
@@ -67,10 +62,52 @@ const TokenDashboard: React.FC = () =>
             const rpcUrl = import.meta.env.VITE_RPC_URL || 'http://127.0.0.1:8545'
             const deployerAddr = import.meta.env.VITE_DEPLOYER_ADDRESS || '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266'
             const provider = new JsonRpcProvider(rpcUrl)
-            setProvider(provider)
-            setAccount(deployerAddr)
-            setError('')
-            console.log('Connected to Anvil at', rpcUrl)
+            if (isMounted) {
+                setProvider(provider)
+                setAccount(deployerAddr)
+                setError('')
+                console.log('Connected to Anvil at', rpcUrl)
+            }
+        }
+
+        initialize().catch(err =>
+        {
+            if (isMounted) {
+                setError(`Connection failed: ${err instanceof Error ? err.message : 'Unknown error'}`)
+            }
+        })
+
+        // Set default token address from env
+        const defaultAddr = import.meta.env.VITE_DEFAULT_TOKEN_ADDRESS
+        if (defaultAddr && isMounted) {
+            setTokenAddress(defaultAddr)
+        }
+
+        return () =>
+        {
+            isMounted = false
+        }
+    }, [])
+
+    const connectWallet = async () =>
+    {
+        try {
+            // Try MetaMask
+            if (window.ethereum) {
+                try {
+                    const provider = new BrowserProvider(window.ethereum)
+                    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' }) as string[]
+                    setProvider(provider)
+                    setAccount(accounts[0])
+                    setError('')
+                    return
+                } catch (err) {
+                    setError(`MetaMask connection failed: ${err instanceof Error ? err.message : 'Unknown error'}`)
+                    return
+                }
+            }
+
+            setError('MetaMask not installed. Using Anvil fallback.')
         } catch (err) {
             setError(`Connection failed: ${err instanceof Error ? err.message : 'Unknown error'}`)
         }
@@ -87,12 +124,35 @@ const TokenDashboard: React.FC = () =>
             setIsLoading(true)
             const contract = new Contract(tokenAddress, TOKEN_ABI, provider)
 
-            const [symbol, decimals, totalSupply, balance] = await Promise.all([
-                contract.symbol?.() || 'N/A',
-                contract.decimals?.() || 18,
-                contract.totalSupply?.() || '0',
-                contract.balanceOf?.(account) || '0'
-            ])
+            // Load each value with fallback handling
+            let symbol = 'N/A'
+            let decimals = 18
+            let totalSupply = '0'
+            let balance = '0'
+
+            try {
+                symbol = await contract.symbol()
+            } catch {
+                symbol = 'N/A'
+            }
+
+            try {
+                decimals = await contract.decimals()
+            } catch {
+                decimals = 18
+            }
+
+            try {
+                totalSupply = await contract.totalSupply()
+            } catch {
+                totalSupply = '0'
+            }
+
+            try {
+                balance = await contract.balanceOf(account)
+            } catch {
+                balance = '0'
+            }
 
             setTokenInfo({
                 symbol: symbol || 'N/A',
