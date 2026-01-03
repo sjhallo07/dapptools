@@ -1,14 +1,14 @@
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.6.7;
 pragma experimental ABIEncoderV2;
 
-import "ds-test/test.sol";
-
+import "../lib/ds-test/test.sol";
 interface Hevm {
     function warp(uint256) external;
     function roll(uint256) external;
-    function load(address,bytes32) external returns (bytes32);
-    function store(address,bytes32,bytes32) external;
-    function sign(uint256,bytes32) external returns (uint8,bytes32,bytes32);
+    function load(address, bytes32) external returns (bytes32);
+    function store(address, bytes32, bytes32) external;
+    function sign(uint256, bytes32) external returns (uint8, bytes32, bytes32);
     function addr(uint256) external returns (address);
     function ffi(string[] calldata) external returns (bytes memory);
 }
@@ -19,8 +19,8 @@ contract HasStorage {
 
 contract CheatCodes is DSTest {
     address store = address(new HasStorage());
+    address constant HEVM_ADDRESS = address(uint160(uint256(keccak256("hevm cheat code"))));
     Hevm hevm = Hevm(HEVM_ADDRESS);
-
     function test_warp_concrete(uint128 jump) public {
         uint pre = block.timestamp;
         hevm.warp(block.timestamp + jump);
@@ -82,9 +82,11 @@ contract CheatCodes is DSTest {
         string[] memory inputs = new string[](3);
         inputs[0] = "echo";
         inputs[1] = "-n";
-        inputs[2] = "0x000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000046163616200000000000000000000000000000000000000000000000000000000";
+        inputs[
+            2
+        ] = "0x000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000046163616200000000000000000000000000000000000000000000000000000000";
 
-        (string memory output) = abi.decode(hevm.ffi(inputs), (string));
+        string memory output = abi.decode(hevm.ffi(inputs), (string));
         assertEq(output, "acab");
     }
 }

@@ -1,11 +1,12 @@
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.6.7;
 
-import "ds-test/test.sol";
-import "ds-token/token.sol";
-import "ds-math/math.sol";
+import "../lib/ds-test/test.sol";
+import "../lib/ds-token/token.sol";
+import "../lib/ds-math/math.sol";
 
 contract ConstructorArg {
-    address immutable public a;
+    address public immutable a;
     constructor(address _a) public {
         a = _a;
     }
@@ -58,8 +59,8 @@ contract SolidityTest is DSTest, DSMath {
         uint postbal = token.balanceOf(usr);
 
         uint expected = usr == address(this)
-                        ? 0    // self transfer is a noop
-                        : amt; // otherwise `amt` has been transfered to `usr`
+            ? 0 // self transfer is a noop
+            : amt; // otherwise `amt` has been transfered to `usr`
         assertEq(expected, postbal - prebal);
     }
 

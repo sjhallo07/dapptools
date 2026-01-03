@@ -1,7 +1,10 @@
-import "ds-test/test.sol";
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.6.7;
+
+import "../lib/ds-test/test.sol";
 
 library A {
-    function f(uint128 x) public returns (uint256) {
+    function f(uint128 x) public pure returns (uint256) {
         return uint(x) * 2;
     }
 }

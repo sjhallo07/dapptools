@@ -2,7 +2,7 @@
 pragma solidity ^0.6.7;
 pragma experimental ABIEncoderV2;
 
-import "../../../ds-test/src/test.sol";
+import "../lib/ds-test/test.sol";
 
 interface Hevm {
     function warp(uint256) external;
@@ -15,6 +15,7 @@ interface Hevm {
 }
 
 contract TestFailCheatCodes is DSTest {
+    address constant HEVM_ADDRESS = address(uint160(uint256(keccak256("hevm cheat code"))));
     Hevm hevm = Hevm(HEVM_ADDRESS);
 
     function testBadFFI() public {

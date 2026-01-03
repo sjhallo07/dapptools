@@ -1,8 +1,9 @@
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.6.7;
 
-import "ds-test/test.sol";
-import "ds-token/token.sol";
-import "ds-math/math.sol";
+import "../lib/ds-test/test.sol";
+import "../lib/ds-token/token.sol";
+import "../lib/ds-math/math.sol";
 
 contract Withdraw {
     receive() external payable {}
@@ -12,7 +13,6 @@ contract Withdraw {
         payable(msg.sender).transfer(address(this).balance);
     }
 }
-
 
 contract SolidityTest is DSTest, DSMath {
     DSToken token;
@@ -32,7 +32,10 @@ contract SolidityTest is DSTest, DSMath {
     }
 
     function prove_smtTimeout(uint x, uint y, uint z) public {
-        if ((x * y / z) * (x / y) / (x * y) == (x * x * x * y * z / x * z * y)) {
+        if (
+            (((x * y) / z) * (x / y)) / (x * y) ==
+            (((x * x * x * y * z) / x) * z * y)
+        ) {
             assertTrue(false);
         } else {
             assertTrue(true);
@@ -52,7 +55,7 @@ contract SolidityTest is DSTest, DSMath {
     }
 
     function prove_mul(uint136 x, uint128 y) public {
-        mul(x,y);
+        mul(x, y);
     }
 
     function prove_distributivity(uint120 x, uint120 y, uint120 z) public {
@@ -67,8 +70,8 @@ contract SolidityTest is DSTest, DSMath {
         uint postbal = token.balanceOf(usr);
 
         uint expected = usr == address(this)
-                        ? 0    // self transfer is a noop
-                        : amt; // otherwise `amt` has been transfered to `usr`
+            ? 0 // self transfer is a noop
+            : amt; // otherwise `amt` has been transfered to `usr`
         assertEq(expected, postbal - prebal);
     }
 
@@ -83,4 +86,3 @@ contract SolidityTest is DSTest, DSMath {
     // allow sending eth to the test contract
     receive() external payable {}
 }
-

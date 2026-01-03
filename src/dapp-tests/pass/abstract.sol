@@ -1,6 +1,7 @@
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.6.7;
 
-import {DSTest} from "ds-test/test.sol";
+import {DSTest} from "../lib/ds-test/test.sol";
 
 // should not be run (no code)
 abstract contract MyTest is DSTest {
