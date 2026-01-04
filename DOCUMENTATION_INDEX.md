@@ -27,6 +27,7 @@ All documentation for your dapptools environment is organized below.
 
 ### Quick References
 - **[QUICKSTART.sh](QUICKSTART.sh)** - Common commands
+- **[.github/scripts/README.md](.github/scripts/README.md)** - Legacy install/build helpers (solc, z3, libff, secp256k1)
 
 ---
 

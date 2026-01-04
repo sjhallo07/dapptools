@@ -317,6 +317,32 @@ class DappModernizationMCPServer
                             },
                         ],
                     },
+                    {
+                        name: 'advanced_token_factory_deploy',
+                        description: 'Plan advanced token features (pausable/blacklist/snapshot/roles) and deployment steps using OpenZeppelin Contracts Wizard and TokenFactory',
+                        arguments: [
+                            {
+                                name: 'network',
+                                description: 'Target network name or RPC URL',
+                                required: false,
+                            },
+                            {
+                                name: 'token_name',
+                                description: 'Token name to generate in wizard',
+                                required: false,
+                            },
+                            {
+                                name: 'token_symbol',
+                                description: 'Token symbol to generate in wizard',
+                                required: false,
+                            },
+                            {
+                                name: 'initial_supply',
+                                description: 'Initial supply (wei units) for factory-created token',
+                                required: false,
+                            },
+                        ],
+                    },
                 ],
             };
         });
@@ -406,6 +432,49 @@ Structure the proposal with:
 5. Resource Requirements
 6. Risk Mitigation
 7. Success Criteria`,
+                                },
+                            },
+                        ],
+                    };
+                }
+
+                case 'advanced_token_factory_deploy': {
+                    const analysis = await this.dappAnalyzer.analyzeDapp();
+                    const network = args?.network || 'http://127.0.0.1:8545';
+                    const tokenName = args?.token_name || 'AdvancedToken';
+                    const tokenSymbol = args?.token_symbol || 'ADV';
+                    const initialSupply = args?.initial_supply || '1000000e18';
+
+                    return {
+                        messages: [
+                            {
+                                role: 'user',
+                                content: {
+                                    type: 'text',
+                                    text: `Design and outline steps to configure advanced token features and deploy a TokenFactory-powered token using OpenZeppelin Contracts Wizard.
+
+Current dapp analysis:
+${JSON.stringify(analysis, null, 2)}
+
+Requirements:
+- Use OpenZeppelin Contracts Wizard (repo: https://github.com/OpenZeppelin/contracts-wizard , app: https://wizard.openzeppelin.com) to generate a role-based ERC20 with:
+  - Pausable transfers
+  - Snapshot capability
+  - Mint/Burn roles
+  - Blacklist-style transfer guard (if not available, describe how to extend)
+- Token metadata defaults: name=${tokenName}, symbol=${tokenSymbol}, decimals=18, initialSupply=${initialSupply} (adjustable by user).
+- Integrate the generated implementation into TokenFactory so factory-created tokens expose these features.
+- Deployment target network: ${network} (allow overriding via RPC URL / PRIVATE_KEY env vars).
+- Provide Foundry commands to build, test, and deploy (using existing scripts when possible) and how to point the factory createToken call to the new implementation.
+
+Deliverables to include in the answer:
+1) Summary of advanced features and security rationale (pausable, snapshot, blacklist/guard, role separation, reentrancy/overflow considerations).
+2) Steps to fetch or embed the Contracts Wizard output into src/AdvancedToken.sol (or new file) and wire it to TokenFactory.
+3) Deployment steps: anvil/local, then testnet/mainnet, including forge script/broadcast flags and env vars.
+4) Post-deploy checks: events, role setup, pause/unpause, snapshot readbacks, blacklist toggling, mint/burn sanity, allowance flows.
+5) Optional: guidance on storing factory metadata (creator, createdAt, symbol uniqueness) and recommended monitoring/logging.
+
+Keep instructions concise and actionable.`,
                                 },
                             },
                         ],

@@ -22,6 +22,7 @@ This MCP server provides:
 - **generate_upgrade_script** - Create automated upgrade scripts
 - **check_dependencies** - Analyze and suggest dependency upgrades
 - **estimate_gas_savings** - Estimate potential gas optimization savings
+- [Etherscan v2 Notes](./ETHERSCAN_V2.md) - Chain IDs, required params, sample endpoints
 
 ### 💬 Prompts
 - **modernization_plan** - Generate comprehensive modernization plans
