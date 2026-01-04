@@ -1,5 +1,13 @@
 {
     "wake.compiler.solc.remappings": [],
     "python-envs.defaultEnvManager": "ms-python.python:system",
-    "python-envs.pythonProjects": []
+    "python-envs.pythonProjects": [],
+    "inlineChat.enableV2": true,
+    "inlineChat.notebookAgent": true,
+    "chat.renderRelatedFiles": true,
+    "chat.restoreLastPanelSession": true,
+    "chat.mcp.assisted.nuget.enabled": true,
+    "chat.edits2.enabled": true,
+    "chat.customAgentInSubagent.enabled": true,
+    "chat.allowAnonymousAccess": true
 }
