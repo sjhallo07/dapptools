@@ -37,6 +37,14 @@ This environment includes both **classic dapptools** and **modern Foundry**:
 
 **See [FOUNDRY_GUIDE.md](./FOUNDRY_GUIDE.md) for installation and usage details.**
 
+### 🤖 MCP Server (Model Context Protocol)
+- AI-powered smart contract analysis and modernization
+- Compatible with Claude Desktop and other MCP clients
+- Automated security audits and upgrade recommendations
+- Resources, tools, and prompts for blockchain development
+
+**See [mcp-server/README.md](./mcp-server/README.md) for setup and [mcp-server/TESTING.md](./mcp-server/TESTING.md) for testing with the MCP Inspector.**
+
 ## Installation
 
 Install Nix if you haven't already ([instructions](https://nixos.org/download.html)). Then install dapptools:
@@ -118,6 +126,55 @@ Symbolically explore the possible execution paths of a call to `dai.transfer(add
 seth bundle-source 0x6b175474e89094c44da98b954eedeac495271d0f > daisrc.json && \
 hevm symbolic --address 0x6b175474e89094c44da98b954eedeac495271d0f --rpc $ETH_RPC_URL  --debug --sig "transfer(address,uint256)" --json-file daisrc.json
 ```
+
+## 🤖 MCP Server
+
+The Model Context Protocol (MCP) server enables AI assistants like Claude to analyze and modernize your smart contracts.
+
+### Quick Start
+
+```sh
+cd mcp-server
+npm install
+npm run build
+
+# Test with MCP Inspector
+npx @modelcontextprotocol/inspector node dist/mcpServer.js
+```
+
+Open http://localhost:6274 in your browser to interact with the server!
+
+### Features
+
+- **🔍 Smart Contract Analysis** - Automated analysis of dapp structure and security
+- **📊 Modernization Reports** - Detailed recommendations for upgrades
+- **🛡️ Security Audits** - Identify missing security patterns
+- **⚡ Gas Optimization** - Estimate potential gas savings
+- **💡 AI Prompts** - Pre-configured prompts for modernization planning
+
+### Integration with Claude Desktop
+
+Add to your `claude_desktop_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "dapp-modernization": {
+      "command": "node",
+      "args": ["/path/to/dapptools/mcp-server/dist/mcpServer.js"],
+      "env": {
+        "PROJECT_ROOT": "/path/to/your/dapp",
+        "RPC_URL": "http://127.0.0.1:8545"
+      }
+    }
+  }
+}
+```
+
+**📖 Documentation:**
+- [MCP Server README](./mcp-server/README.md) - Full documentation
+- [Testing Guide](./mcp-server/TESTING.md) - How to test with MCP Inspector
+- [Integration Guide](./INTEGRATION_GUIDE.md) - Complete integration walkthrough
 
 ## Contributing
 
