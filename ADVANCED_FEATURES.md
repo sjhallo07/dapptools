@@ -249,6 +249,19 @@ cd /workspaces/dapptools/frontend
 npm run dev
 ```
 
+### 4. Wallet Connection (MetaMask)
+- Install MetaMask in your browser and create/unlock a wallet.
+- Ensure MetaMask is on the same network as your contracts (e.g., http://127.0.0.1:8545 or your testnet).
+- When the frontend loads, click “Connect Wallet” (MetaMask will prompt for approval).
+- If the network differs, switch the network in MetaMask or add the local RPC URL.
+
+### 5. Using the Token Creator UI
+1) Open the frontend at http://localhost:5173.
+2) In the “Token Creator” tab, enter your deployed TokenFactory address.
+3) Fill in Name, Symbol, Decimals, and Initial Supply.
+4) Click “Create Token” and confirm the transaction in MetaMask.
+5) After mining, the new token address appears in the recent tokens list; use it in the dashboard to view balances or transfer.
+
 ## 📝 Example Usage
 
 ### Create Token via UI
