@@ -63,17 +63,29 @@ npm install
 # Build TypeScript
 npm run build
 
-# Test the CLI (optional)
+# Test with MCP Inspector (recommended)
+npx @modelcontextprotocol/inspector node dist/mcpServer.js
+# Then open http://localhost:6274 in your browser
+
+# Or test the CLI (alternative)
 RPC_URL=http://127.0.0.1:8545 npm start
 ```
 
-**In the CLI, test commands:**
+**Testing with MCP Inspector:**
+1. Open http://localhost:6274
+2. Test Resources tab (analysis, reports, scripts)
+3. Test Tools tab (analyze_dapp, security_audit, etc.)
+4. Test Prompts tab (modernization_plan, security_checklist)
+
+**Or in the CLI, test commands:**
 ```bash
 mcp> network
 mcp> accounts
 mcp> help
 mcp> exit
 ```
+
+**See [mcp-server/TESTING.md](./mcp-server/TESTING.md) for detailed testing instructions.**
 
 ### Step 3: Update Frontend Configuration
 
