@@ -343,6 +343,32 @@ class DappModernizationMCPServer
                             },
                         ],
                     },
+                    {
+                        name: 'etherscan_v2_helper',
+                        description: 'Guide Etherscan v2 API usage (chain selection, tx status, block/receipt proxy calls)',
+                        arguments: [
+                            {
+                                name: 'chainid',
+                                description: 'Target chain id (e.g., 1 mainnet, 11155111 Sepolia)',
+                                required: false,
+                            },
+                            {
+                                name: 'module',
+                                description: 'Etherscan module (stats, transaction, proxy)',
+                                required: false,
+                            },
+                            {
+                                name: 'action',
+                                description: 'Etherscan action (ethsupply, getstatus, gettxreceiptstatus, eth_getBlockByNumber, eth_getTransactionReceipt, etc.)',
+                                required: false,
+                            },
+                            {
+                                name: 'txhash',
+                                description: 'Transaction hash for status/receipt calls',
+                                required: false,
+                            },
+                        ],
+                    },
                 ],
             };
         });
@@ -432,6 +458,44 @@ Structure the proposal with:
 5. Resource Requirements
 6. Risk Mitigation
 7. Success Criteria`,
+                                },
+                            },
+                        ],
+                    };
+                }
+
+                case 'etherscan_v2_helper': {
+                    const chainid = args?.chainid || '1';
+                    const module = args?.module || 'proxy';
+                    const action = args?.action || 'eth_getTransactionReceipt';
+                    const txhash = args?.txhash || '<txhash>';
+
+                    return {
+                        messages: [
+                            {
+                                role: 'user',
+                                content: {
+                                    type: 'text',
+                                    text: `Provide concise steps and ready-to-run examples for Etherscan API v2.
+
+Key facts (see ./ETHERSCAN_V2.md):
+- All v2 calls require chainid and apikey.
+- Base URL pattern: https://api.etherscan.io/v2/api?chainid=<id>&module=<module>&action=<action>&...&apikey=KEY
+- Chain list endpoint: https://api.etherscan.io/v2/chainlist (69 networks, includes mainnet/testnets and L2s like Base, Arbitrum, Optimism, Polygon, BNB, etc.).
+
+Requested defaults:
+- chainid: ${chainid}
+- module: ${module}
+- action: ${action}
+- txhash (if needed): ${txhash}
+
+Produce:
+1) A one-liner curl for tx status (module=transaction, action=getstatus or gettxreceiptstatus) with placeholders for apikey/txhash.
+2) A one-liner curl for proxy receipt (module=proxy, action=eth_getTransactionReceipt) with placeholders.
+3) A one-liner curl for block by number (module=proxy, action=eth_getBlockByNumber) showing tag=latest or hex block.
+4) Note how to switch chain via chainid and how to find chain ids (chainlist link).
+5) Error handling tips: status:0 NOTOK means missing/invalid key or params; ensure apikey passed and chainid present.
+Keep it short and actionable.`,
                                 },
                             },
                         ],
@@ -622,5 +686,3 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     const server = new DappModernizationMCPServer();
     server.run().catch(console.error);
 }
-
-export { DappModernizationMCPServer };

@@ -6,12 +6,12 @@
   "type": "module",
   "scripts": {
     "build": "tsc",
-    "dev": "ts-node src/index.ts",
+    "dev": "node --loader ts-node/esm src/index.ts",
     "start": "node dist/index.js",
     "mcp": "node dist/mcpServer.js",
-    "mcp-dev": "ts-node src/mcpServer.ts",
-    "modernize": "ts-node src/modernizeCli.ts",
-    "analyze": "ts-node src/modernizeCli.ts",
+    "mcp-dev": "node --loader ts-node/esm src/mcpServer.ts",
+    "modernize": "node --loader ts-node/esm src/modernizeCli.ts",
+    "analyze": "node --loader ts-node/esm src/modernizeCli.ts",
     "test": "jest"
   },
   "dependencies": {

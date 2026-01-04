@@ -5,8 +5,9 @@ import './App.css'
 
 function App()
 {
+    const defaultFactoryAddress = import.meta.env.VITE_FACTORY_ADDRESS || ''
     const [activeTab, setActiveTab] = useState<'dashboard' | 'creator'>('dashboard')
-    const [factoryAddress, setFactoryAddress] = useState<string>('')
+    const [factoryAddress, setFactoryAddress] = useState<string>(defaultFactoryAddress)
 
     return (
         <div className="App">
