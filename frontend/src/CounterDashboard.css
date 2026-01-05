@@ -1,0 +1,116 @@
+.counter-card {
+    background: linear-gradient(135deg, #0e1424 0%, #111a2f 100%);
+    border: 1px solid #1e2a44;
+    border-radius: 16px;
+    padding: 20px;
+    color: #e9f0ff;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.counter-header h2 {
+    margin: 0;
+    font-size: 1.4rem;
+}
+
+.counter-header p {
+    margin: 4px 0 0;
+    color: #9fb4d6;
+    font-size: 0.9rem;
+}
+
+.counter-input-group {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.counter-input-group input {
+    flex: 1;
+    min-width: 260px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid #24385a;
+    background: #0c1320;
+    color: #e9f0ff;
+}
+
+.counter-input-group button {
+    padding: 10px 14px;
+    border-radius: 10px;
+    border: none;
+    background: #3b82f6;
+    color: white;
+    cursor: pointer;
+    transition: transform 0.1s ease, box-shadow 0.2s ease;
+}
+
+.counter-input-group button:disabled,
+.counter-actions button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.counter-stats {
+    display: flex;
+    gap: 16px;
+}
+
+.counter-stats .stat {
+    flex: 1;
+    padding: 12px;
+    background: #0c1320;
+    border: 1px solid #1f2f4a;
+    border-radius: 12px;
+}
+
+.counter-stats .stat span {
+    display: block;
+    color: #9fb4d6;
+    font-size: 0.9rem;
+}
+
+.counter-stats .stat strong {
+    display: block;
+    font-size: 1.6rem;
+    margin-top: 4px;
+}
+
+.counter-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.counter-actions input {
+    flex: 1;
+    min-width: 200px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid #24385a;
+    background: #0c1320;
+    color: #e9f0ff;
+}
+
+.counter-actions button {
+    padding: 10px 14px;
+    border-radius: 10px;
+    border: none;
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+    color: white;
+    cursor: pointer;
+    transition: transform 0.1s ease, box-shadow 0.2s ease;
+}
+
+.counter-actions button:last-child {
+    background: linear-gradient(135deg, #6366f1, #3b82f6);
+}
+
+.counter-actions button:hover:not(:disabled),
+.counter-input-group button:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 25px rgba(59, 130, 246, 0.25);
+}

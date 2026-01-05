@@ -1,12 +1,13 @@
 import React, { useState } from 'react'
 import TokenDashboard from './TokenDashboard'
 import TokenCreator from './TokenCreator'
+import CounterDashboard from './CounterDashboard'
 import './App.css'
 
 function App()
 {
     const defaultFactoryAddress = import.meta.env.VITE_FACTORY_ADDRESS || ''
-    const [activeTab, setActiveTab] = useState<'dashboard' | 'creator'>('dashboard')
+    const [activeTab, setActiveTab] = useState<'dashboard' | 'creator' | 'counter'>('dashboard')
     const [factoryAddress, setFactoryAddress] = useState<string>(defaultFactoryAddress)
 
     return (
@@ -26,11 +27,18 @@ function App()
                     >
                         Token Creator
                     </button>
+                    <button
+                        className={`tab ${activeTab === 'counter' ? 'active' : ''}`}
+                        onClick={() => setActiveTab('counter')}
+                    >
+                        Counter
+                    </button>
                 </div>
             </nav>
 
             <div className="app-content">
                 {activeTab === 'dashboard' && <TokenDashboard />}
+                {activeTab === 'counter' && <CounterDashboard />}
                 {activeTab === 'creator' && (
                     <div className="creator-section">
                         <div className="factory-input">
