@@ -15,7 +15,7 @@ interface TokenCreationForm
 {
     name: string
     symbol: string
-    decimals: number
+    decimals: string
     initialSupply: string
 }
 
@@ -24,7 +24,7 @@ const TokenCreator: React.FC<{ factoryAddress: string }> = ({ factoryAddress }) 
     const [form, setForm] = useState<TokenCreationForm>({
         name: '',
         symbol: '',
-        decimals: 18,
+        decimals: '18',
         initialSupply: ''
     })
 
@@ -73,13 +73,14 @@ const TokenCreator: React.FC<{ factoryAddress: string }> = ({ factoryAddress }) 
             }
 
             // Parse initial supply
-            const initialSupply = parseUnits(form.initialSupply, form.decimals)
+            const decimals = Number(form.decimals || '18')
+            const initialSupply = parseUnits(form.initialSupply, decimals)
 
             // Call createToken
             const tx = await factory.createToken(
                 form.name,
                 form.symbol,
-                form.decimals,
+                decimals,
                 initialSupply
             )
 
@@ -109,7 +110,7 @@ const TokenCreator: React.FC<{ factoryAddress: string }> = ({ factoryAddress }) 
                     setForm({
                         name: '',
                         symbol: '',
-                        decimals: 18,
+                        decimals: '18',
                         initialSupply: ''
                     })
                 }
@@ -159,7 +160,21 @@ const TokenCreator: React.FC<{ factoryAddress: string }> = ({ factoryAddress }) 
                         min="0"
                         max="18"
                         value={form.decimals}
-                        onChange={(e) => setForm({ ...form, decimals: parseInt(e.target.value) })}
+                        onChange={(e) =>
+                        {
+                            const decimalsInput = e.target.value
+                            if (decimalsInput === '') {
+                                setForm({ ...form, decimals: '' })
+                                return
+                            }
+                            const parsedDecimals = Number(val)
+                            if (Number.isNaN(parsedDecimals)) {
+                                setForm({ ...form, decimals: '' })
+                                return
+                            }
+                            const clamped = Math.min(18, Math.max(0, Math.floor(parsedDecimals)))
+                            setForm({ ...form, decimals: String(clamped) })
+                        }}
                         disabled={isLoading}
                     />
                 </div>

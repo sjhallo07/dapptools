@@ -9,5 +9,6 @@
     "chat.mcp.assisted.nuget.enabled": true,
     "chat.edits2.enabled": true,
     "chat.customAgentInSubagent.enabled": true,
-    "chat.allowAnonymousAccess": true
+    "chat.allowAnonymousAccess": true,
+    "editor.formatOnSave": true
 }
