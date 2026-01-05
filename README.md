@@ -176,6 +176,24 @@ Add to your `claude_desktop_config.json`:
 - [Testing Guide](./mcp-server/TESTING.md) - How to test with MCP Inspector
 - [Integration Guide](./INTEGRATION_GUIDE.md) - Complete integration walkthrough
 
+## 🚀 Local dapp quickstart (Anvil + frontend)
+
+1. Start a local chain (Anvil):
+  - Ensure Foundry is installed (see [FOUNDRY_GUIDE.md](./FOUNDRY_GUIDE.md)).
+  - Run `anvil` (defaults: chainId 31337, funded dev accounts).
+2. Configure the frontend:
+  - Copy `frontend/.env` (defaults already point to Anvil at `http://127.0.0.1:8545`).
+  - Local signer toggle: `VITE_USE_ANVIL_SIGNER=true` uses the bundled Anvil dev key (`VITE_ANVIL_PRIVATE_KEY`) to sign without MetaMask prompts. Set it to `false` to require MetaMask instead.
+3. Run the frontend:
+  - `cd frontend && npm install` (first time)
+  - `npm run dev` and open http://localhost:5173
+4. Interact:
+  - Token dashboard: load the default token address from `.env` or create a token with the factory.
+  - Counter dashboard: uses the default Counter address deployed on Anvil.
+5. MCP server (optional):
+  - `cd mcp-server && npm install && npm run build`
+  - `npx @modelcontextprotocol/inspector node dist/mcpServer.js` (see above)
+
 ## Contributing
 
 Contributions are always welcome! You may be interested in the
