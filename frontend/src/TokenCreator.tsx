@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { BrowserProvider, Contract, parseUnits } from 'ethers'
+import { BrowserProvider, Contract, JsonRpcProvider, Wallet, parseUnits } from 'ethers'
 import './TokenCreator.css'
 
 // TokenFactory ABI
@@ -47,14 +47,30 @@ const TokenCreator: React.FC<{ factoryAddress: string }> = ({ factoryAddress }) 
             setError('')
             setSuccess('')
 
-            // Get provider and signer
-            if (!window.ethereum) {
-                throw new Error('MetaMask not found')
-            }
+            const rpcUrl = import.meta.env.VITE_RPC_URL || 'http://127.0.0.1:8545'
+            const anvilPrivateKey = import.meta.env.VITE_ANVIL_PRIVATE_KEY
+            const forceAnvilSigner = (import.meta.env.VITE_USE_ANVIL_SIGNER || 'false').toLowerCase() === 'true'
 
-            const provider = new BrowserProvider(window.ethereum)
-            const signer = await provider.getSigner()
-            const factory = new Contract(factoryAddress, FACTORY_ABI, signer)
+            const canUseAnvil = forceAnvilSigner || !window.ethereum
+
+            // Prefer MetaMask unless explicitly forcing Anvil signer
+            let factory: Contract
+
+            if (!canUseAnvil) {
+                const provider = new BrowserProvider(window.ethereum)
+                const signer = await provider.getSigner()
+                factory = new Contract(factoryAddress, FACTORY_ABI, signer)
+            } else {
+                const privateKey = anvilPrivateKey || '0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80'
+
+                if (!privateKey) {
+                    throw new Error('Missing VITE_ANVIL_PRIVATE_KEY for local signing')
+                }
+
+                const provider = new JsonRpcProvider(rpcUrl)
+                const wallet = new Wallet(privateKey, provider)
+                factory = new Contract(factoryAddress, FACTORY_ABI, wallet)
+            }
 
             // Parse initial supply
             const initialSupply = parseUnits(form.initialSupply, form.decimals)
