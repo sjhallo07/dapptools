@@ -11,7 +11,7 @@ const COUNTER_ABI = [
 const CounterDashboard: React.FC = () =>
 {
     const [provider, setProvider] = useState<BrowserProvider | JsonRpcProvider | null>(null)
-    const [account, setAccount] = useState<string>('')
+    const [, setAccount] = useState<string>('')
     const [counterAddress, setCounterAddress] = useState<string>('')
     const [current, setCurrent] = useState<string>('0')
     const [newValue, setNewValue] = useState<string>('')
