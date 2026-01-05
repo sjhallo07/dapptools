@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { BrowserProvider, JsonRpcProvider, Contract } from 'ethers'
+import { BrowserProvider, JsonRpcProvider, Contract, Wallet } from 'ethers'
 import './CounterDashboard.css'
 
 const COUNTER_ABI = [
@@ -83,19 +83,42 @@ const CounterDashboard: React.FC = () =>
     const writeWithSigner = async (fn: (contract: Contract) => Promise<unknown>) =>
     {
         if (!provider || !counterAddress) {
-            setStatus('Enter counter address and connect a signer (MetaMask).')
+            setStatus('Enter counter address and connect a signer (MetaMask or Anvil key).')
             return
         }
-        if (provider instanceof JsonRpcProvider) {
-            setStatus('Writes require MetaMask (signer). Switch to MetaMask connection.')
-            return
-        }
+
+        const useAnvilSigner = (import.meta.env.VITE_USE_ANVIL_SIGNER || 'false').toLowerCase() === 'true'
+        const rpcUrl = import.meta.env.VITE_RPC_URL || 'http://127.0.0.1:8545'
+        const anvilPrivateKey = import.meta.env.VITE_ANVIL_PRIVATE_KEY || '0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80'
+
         try {
             setIsLoading(true)
-            const signer = await provider.getSigner()
-            const contract = new Contract(counterAddress, COUNTER_ABI, signer)
-            const tx = await fn(contract)
-            await (tx as any).wait()
+
+            let signerContract: Contract
+
+            if (provider instanceof BrowserProvider) {
+                const signer = await provider.getSigner()
+                signerContract = new Contract(counterAddress, COUNTER_ABI, signer)
+            } else {
+                if (!useAnvilSigner) {
+                    setStatus('Writes require MetaMask, or enable VITE_USE_ANVIL_SIGNER for local key signing.')
+                    return
+                }
+
+                if (!anvilPrivateKey) {
+                    setStatus('Missing VITE_ANVIL_PRIVATE_KEY for local signing.')
+                    return
+                }
+
+                const localProvider = provider instanceof JsonRpcProvider ? provider : new JsonRpcProvider(rpcUrl)
+                const wallet = new Wallet(anvilPrivateKey, localProvider)
+                signerContract = new Contract(counterAddress, COUNTER_ABI, wallet)
+            }
+
+            const tx = await fn(signerContract)
+            if (tx && typeof (tx as any).wait === 'function') {
+                await (tx as any).wait()
+            }
             setStatus('Transaction confirmed')
             await loadValue()
         } catch (err) {
