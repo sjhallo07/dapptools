@@ -144,6 +144,22 @@ export RPC_URL=http://127.0.0.1:8545
 export PROJECT_ROOT=/path/to/your/dapp
 ```
 
+### Local dapp test flow (Anvil + frontend)
+
+If you want to exercise the MCP server against the bundled demo dapp locally:
+
+1. Start Anvil
+    - In WSL: `~/.foundry/bin/anvil --host 127.0.0.1 --port 8545` (chainId 31337, funded dev keys)
+2. Run the frontend (optional UI)
+    - `cd ../frontend && npm install && npm run dev`
+    - Open http://localhost:5173; defaults use `VITE_USE_ANVIL_SIGNER=true` to auto-sign with the dev key.
+3. Point MCP to the project
+    - Set `PROJECT_ROOT` to the repo root (or the dapp folder you want analyzed).
+    - Set `RPC_URL=http://127.0.0.1:8545` for local chain access.
+4. Start the MCP Inspector
+    - `npx @modelcontextprotocol/inspector node dist/mcpServer.js`
+    - Open the provided URL and run resources/tools (e.g., `analyze_dapp`, `security_audit`).
+
 ### Running in Different Modes
 
 **Development Mode** (with TypeScript):
