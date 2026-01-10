@@ -10,5 +10,35 @@
     "chat.edits2.enabled": true,
     "chat.customAgentInSubagent.enabled": true,
     "chat.allowAnonymousAccess": true,
-    "editor.formatOnSave": true
+    "files.autoSave": "onFocusChange",
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.codeActionsOnSave": {
+        "source.fixAll": true,
+        "source.organizeImports": true,
+        "source.fixAll.eslint": true
+    },
+    "[typescript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[javascript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[python]": {
+        "editor.formatOnSave": true
+    },
+    "[rust]": {
+        "editor.formatOnSave": true
+    },
+    "[solidity]": {
+        "editor.formatOnSave": true
+    },
+    "eslint.format.enable": true,
+    "prettier.useEditorConfig": true,
+    "python.analysis.typeCheckingMode": "basic",
+    "python.testing.pytestEnabled": true,
+    "python.testing.pytestArgs": [
+        "."
+    ],
+    "github.copilot.inlineSuggest.enable": true
 }
